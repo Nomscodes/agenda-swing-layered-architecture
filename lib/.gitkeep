@@ -1,0 +1,22 @@
+# 📚 Pasta de Bibliotecas (/lib)
+
+Este diretório contém os módulos principais, utilitários e lógicas de apoio que sustentam o funcionamento da **Agenda**.
+
+## 📂 O que colocar aqui?
+
+Para manter a organização do projeto, a pasta `/lib` deve ser usada para:
+* **Utils/Helpers:** Funções genéricas (ex: formatadores de data, validadores de CPF/E-mail).
+* **Services:** Lógica de comunicação com APIs ou serviços externos.
+* **Config:** Arquivos de configuração de bibliotecas de terceiros.
+* **Core:** Classes e funções que representam a regra de negócio central.
+
+## 🛠️ Organização Sugerida
+
+
+
+- `formatters.js` — Manipulação de strings e datas para exibição na agenda.
+- `validators.js` — Validação de formulários de contato e compromissos.
+- `storage.js` — Lógica para persistência de dados (LocalStorage ou Banco de Dados).
+
+---
+> **Nota:** Evite colocar componentes de interface (UI) diretamente aqui. Esta pasta foca na camada de lógica e processamento de dados.
