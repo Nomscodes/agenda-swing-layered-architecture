@@ -9,7 +9,7 @@ Este projeto foi desenvolvido como parte do **Projeto Integrador na FATESG Senai
 Acesse os documentos detalhados para entender a engenharia do projeto:
 
 * 🚀 [**Guia de Instalação**](./docs/instalacao.md) - Como rodar o projeto localmente.
-* 🏛️ [**Arquitetura do Sistema (DAS)**](./docs/Agenda_Swing_DOCUMENTO_ARQUITETURA_DE_SOFTWARE_DAS01)
+* 🏛️ [**Arquitetura do Sistema (DAS)**](./docs/Agenda_Swing_DOCUMENTO_ARQUITETURA_DE_SOFTWARE_DAS01.pdf)
 * 📊 [**Diagramas UML**](./docs/diagramas/) - Visão visual da estrutura.
 
 ---
