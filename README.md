@@ -1,32 +1,35 @@
 # 📅 Agenda Swing: Evolução Arquitetural Didática
 
-📌 **Sobre o Projeto**
-Este projeto foi desenvolvido como parte do **Projeto Integrador na FATESG Senai** (Análise e Desenvolvimento de Sistemas). A "Agenda Swing" é um estudo de caso sobre a transição de um código monolítico para uma **Arquitetura em Camadas (3-Tier)**.
+## 📌 Sobre o Projeto
+Este projeto foi desenvolvido como parte do **Projeto Integrador na FATESG SENAI** (Análise e Desenvolvimento de Sistemas). A "Agenda Swing" é um estudo de caso prático sobre a transição de um código monolítico para uma **Arquitetura em Camadas (3-Tier)**, aplicando conceitos aprendidos no terceiro semestre.
 
----
+## 📚 Documentação e Engenharia
+Acesse os documentos detalhados para entender a construção do sistema:
 
-## 📚 Documentação e Guia Rápido
-Acesse os documentos detalhados para entender a engenharia do projeto:
-
-* 🚀 [**Guia de Instalação**](./docs/instalacao.md) - Como rodar o projeto localmente.
-* 🏛️ [**Arquitetura do Sistema (DAS)**](./docs/Agenda_Swing_DOCUMENTO_ARQUITETURA_DE_SOFTWARE_DAS01.pdf)
-* 📊 [**Diagramas UML**](./docs/diagramas/) - Visão visual da estrutura.
-
----
+* 🚀 **[Guia de Instalação](./docs)** - Como configurar o ambiente e rodar o projeto.
+* 🏛️ **[Arquitetura do Sistema (DAS)](./docs)** - Documento de Arquitetura de Software baseado no modelo 4+1.
+* 📊 **[Diagramas UML](./docs)** - Representação visual da estrutura de classes e fluxo.
 
 ## 🏗️ Arquitetura do Sistema
-O objetivo principal foi aplicar boas práticas de engenharia de software, separando responsabilidades:
+O foco principal foi a separação de responsabilidades para garantir manutenibilidade:
 
-* **Camada de Visão (UI):** Desenvolvida em **Java Swing**, focada na interação com o usuário.
-* **Camada de Negócio (Business):** Responsável pelas validações e lógica do sistema.
-* **Camada de Dados (Data/DAO):** Gerencia a persistência no **SQLite**, garantindo desacoplamento.
+* **Camada de Visão (UI):** Desenvolvida em **Java Swing**, focada na interface e experiência do usuário.
+* **Camada de Negócio (Business):** Contém as regras de negócio, validações e lógica principal.
+* **Camada de Dados (Data/DAO):** Gerencia a persistência no **SQLite**, utilizando o padrão DAO para desacoplamento.
 
-## 📂 Estrutura de Pastas
-```text
-├── docs/               # Documentação oficial (DAS e Diagramas)
-├── src/
-│   ├── ui/             # Telas e componentes Swing
-│   ├── business/       # Regras de negócio e validações
-│   └── data/           # Classes DAO e conexão com SQLite
-├── lib/                # Bibliotecas e Drivers (.jar)
-└── database/           # Arquivo do banco de dados SQLite
+## 📂 Estrutura do Repositório
+Baseado na organização atual do projeto:
+
+* `bin/`: Arquivos binários compilados.
+* `database/`: Localização do arquivo de banco de dados SQLite.
+* `docs/`: Documentação técnica, incluindo o DAS e diagramas.
+* `lib/`: Bibliotecas externas e drivers necessários (.jar).
+* `src/`: Código-fonte organizado por pacotes (UI, Business, Data).
+* `pom.xml`: Arquivo de configuração do Maven para gerenciamento de dependências.
+
+## 👥 Equipe do Projeto
+* **Alexander** — [Alexsanei](https://github.com/Alexsanei)
+* **Caio Abreu** — [Caio4breu](https://github.com/Caio4breu)
+* **Cassiano Abreu** — [Nomscodes](https://github.com/Nomscodes)
+* **Gabriel Naoki** — [GabrielNaokiUT](https://github.com/GabrielNaokiUT)
+* **Wyllian Mariano** — [wyllianmn](https://github.com/wyllianmn)
