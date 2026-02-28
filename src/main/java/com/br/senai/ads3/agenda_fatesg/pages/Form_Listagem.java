@@ -55,6 +55,7 @@ public class Form_Listagem extends javax.swing.JFrame {
         grid = new javax.swing.JTable();
         btnFechar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
+        jButtonVoltarInicio = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -172,6 +173,17 @@ public class Form_Listagem extends javax.swing.JFrame {
             }
         });
 
+        jButtonVoltarInicio.setBackground(new java.awt.Color(102, 102, 102));
+        jButtonVoltarInicio.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButtonVoltarInicio.setForeground(new java.awt.Color(255, 255, 255));
+        jButtonVoltarInicio.setText("Voltar à tela inicial");
+        jButtonVoltarInicio.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonVoltarInicio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonVoltarInicioActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -190,11 +202,13 @@ public class Form_Listagem extends javax.swing.JFrame {
                         .addGap(0, 31, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGap(35, 35, 35)
+                .addComponent(jButtonVoltarInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnFechar, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(141, 141, 141)
+                .addGap(142, 142, 142)
                 .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(46, 46, 46))
+                .addGap(45, 45, 45))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -206,9 +220,11 @@ public class Form_Listagem extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnFechar)
-                    .addComponent(btnExcluir))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonVoltarInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnFechar)
+                        .addComponent(btnExcluir)))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
 
@@ -306,6 +322,12 @@ public class Form_Listagem extends javax.swing.JFrame {
         worker.execute();
     }//GEN-LAST:event_btnExcluirActionPerformed
 
+    private void jButtonVoltarInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVoltarInicioActionPerformed
+        // TODO add your handling code here:
+        new TelaInicial().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButtonVoltarInicioActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -347,6 +369,7 @@ public class Form_Listagem extends javax.swing.JFrame {
     private javax.swing.JButton btnFechar;
     private javax.swing.JTextField edtFiltroNome;
     private javax.swing.JTable grid;
+    private javax.swing.JButton jButtonVoltarInicio;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
