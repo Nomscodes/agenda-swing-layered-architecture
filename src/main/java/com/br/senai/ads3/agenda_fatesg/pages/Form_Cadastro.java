@@ -7,9 +7,6 @@ import com.br.senai.ads3.agenda_fatesg.enums.TipoTela;
 import com.br.senai.ads3.agenda_fatesg.exceptions.BusinessException;
 import com.br.senai.ads3.agenda_fatesg.exceptions.ValidationException;
 import java.awt.Color;
-import java.io.FileWriter;
-import java.nio.file.Files;
-import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
@@ -217,8 +214,6 @@ public class Form_Cadastro extends javax.swing.JFrame {
         Contato dto = new Contato(nomeNovo, email, telefone);
         String originalName = this.contato != null ? this.contato.getNome() : "";
 
-        String status = "ativo";
-
         // Executar I/O em background para não travar UI
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
             @Override
@@ -283,10 +278,8 @@ public class Form_Cadastro extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Form_Cadastro().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new Form_Cadastro().setVisible(true);
         });
     }
 

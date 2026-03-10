@@ -6,11 +6,13 @@ import com.br.senai.ads3.agenda_fatesg.controllers.ListController;
 import com.br.senai.ads3.agenda_fatesg.domains.Contato;
 import com.br.senai.ads3.agenda_fatesg.enums.TipoTela;
 import java.awt.EventQueue;
+import java.awt.HeadlessException;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.RowFilter;
 import javax.swing.table.TableRowSorter;
 import javax.swing.JOptionPane;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
@@ -28,6 +30,7 @@ public class Form_Listagem extends javax.swing.JFrame {
 
     /**
      * Creates new form Form_Listagem
+     * @param controller
      */
     public Form_Listagem(ListController controller) {
         this.contatoController = controller;
@@ -301,7 +304,7 @@ public class Form_Listagem extends javax.swing.JFrame {
                     } else {
                         JOptionPane.showMessageDialog(Form_Listagem.this, "Contato não encontrado ou já inativo.");
                     }
-                } catch (Exception ex) {
+                } catch (HeadlessException | InterruptedException | ExecutionException ex) {
                     JOptionPane.showMessageDialog(Form_Listagem.this, "Erro ao processar exclusão: " + ex.getMessage());
                 }
             }
@@ -337,10 +340,8 @@ public class Form_Listagem extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Form_Listagem().setVisible(true);
-            }
+        EventQueue.invokeLater(() -> {
+            new Form_Listagem().setVisible(true);
         });
     }
 
@@ -374,7 +375,7 @@ public class Form_Listagem extends javax.swing.JFrame {
                 try {
                     List<Contato> list = get();
                     populateTable(list);
-                } catch (Exception ex) {
+                } catch (InterruptedException | ExecutionException ex) {
                     SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(Form_Listagem.this, "Erro ao carregar dados: " + ex.getMessage()));
                 }
             }
