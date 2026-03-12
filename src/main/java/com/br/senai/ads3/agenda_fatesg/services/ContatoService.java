@@ -7,6 +7,8 @@ package com.br.senai.ads3.agenda_fatesg.services;
 import com.br.senai.ads3.agenda_fatesg.domains.Contato;
 import com.br.senai.ads3.agenda_fatesg.repositories.ContatoRepository;
 import com.br.senai.ads3.agenda_fatesg.repositories.IContatoRepository;
+import com.br.senai.ads3.agenda_fatesg.validations.ContatoValidation;
+import com.br.senai.ads3.agenda_fatesg.validations.IContatoValidation;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,33 +20,30 @@ import java.util.List;
 public class ContatoService implements IContatoService {
 
     private final IContatoRepository repository;
+    private final IContatoValidation validation;
 
     public ContatoService() {
         this.repository = new ContatoRepository();
+        this.validation = new ContatoValidation(this.repository);
     }
 
     public ContatoService(Path storage) {
         this.repository = new ContatoRepository(storage);
+        this.validation = new ContatoValidation(this.repository);
     }
 
     @Override
     public boolean inserir(Contato contato) throws Exception {
-        validate(contato);
-        if (!this.contatoExiste(contato)) {
-            return this.repository.inserir(contato);
-        } else {
-            throw new Exception("Este contato já existe cadastrado");
-        }
+        this.validation.validaCampo(contato);
+        this.validation.validaRegraInserir(contato);
+        return this.repository.inserir(contato);        
     }
 
     @Override
     public boolean alterar(Contato contato) throws Exception {
-        validate(contato);
-        if (!this.contatoExiste(contato)) {
-            return this.repository.alterar(contato);
-        } else {
-            throw new Exception("Este contato já existe cadastrado");
-        }
+        this.validation.validaCampo(contato);
+        this.validation.validaRegraAlterar(contato);
+        return this.repository.alterar(contato);
     }
 
     @Override
