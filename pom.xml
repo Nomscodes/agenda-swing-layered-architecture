@@ -3,43 +3,20 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.br.senai.ads3</groupId>
     <artifactId>Agenda_Fatesg</artifactId>
-    <version>1.0.1</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
         <exec.mainClass>com.br.senai.ads3.agenda_fatesg.Agenda_Fatesg</exec.mainClass>
     </properties>    
-    <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.38</version>
-        </dependency>
-        <dependency>
-            <groupId>org.junit</groupId>
-            <artifactId>junit5-api</artifactId>
-            <version>5.0.0-ALPHA</version>
-            <scope>test</scope>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.antublue</groupId>
-            <artifactId>test-engine</artifactId>
-            <version>6.0.0-M2</version>
-            <scope>test</scope>
-            <type>jar</type>
-        </dependency>
-    </dependencies>
     <build>
     <plugins>
-        <!-- Plugin de Compilação: ONDE O LOMBOK DEVE FICAR -->
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.13.0</version>
+            <version>3.11.0</version>
             <configuration>
-                <release>21</release>
                 <annotationProcessorPaths>
                     <path>
                         <groupId>org.projectlombok</groupId>
@@ -47,17 +24,12 @@
                         <version>1.18.38</version>
                     </path>
                 </annotationProcessorPaths>
-               <compilerArgs>
-                  <arg>-Xlint</arg>
-               </compilerArgs>
             </configuration>
         </plugin>
-
-        <!-- Plugin do JAR: APENAS PARA O MANIFESTO -->
-        <plugin>
+        <plugin> <!-- verificar necessidade com o professor -->
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>
-            <version>3.4.1</version>
+            <version>3.2.0</version>
             <configuration>
                 <archive>
                     <manifest>
@@ -66,7 +38,33 @@
                     </manifest>
                 </archive>
             </configuration>
-        </plugin>
+        </plugin><!-- verificar necessidade com o professor -->
     </plugins>
 </build>
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.38</version>
+            <scope>provided</scope> <!-- verificar com o professor da necessidade disso -->
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.10.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>5.10.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.10.3</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>
