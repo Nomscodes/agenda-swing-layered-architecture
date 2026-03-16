@@ -1,9 +1,12 @@
 package com.br.senai.ads3.agenda_fatesg.services;
 
 import com.br.senai.ads3.agenda_fatesg.domains.Contato;
+import com.br.senai.ads3.agenda_fatesg.exceptions.BusinessException;
+import com.br.senai.ads3.agenda_fatesg.exceptions.ValidationException;
 import com.br.senai.ads3.agenda_fatesg.repositories.ContatoRepository;
 import com.br.senai.ads3.agenda_fatesg.repositories.IContatoRepository;
 import com.br.senai.ads3.agenda_fatesg.validation.ContatoValidation;
+import com.br.senai.ads3.agenda_fatesg.validation.ExceptionValidationCampo;
 import com.br.senai.ads3.agenda_fatesg.validation.IContatoValidation;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -29,38 +32,36 @@ public class ContatoService implements IContatoService {
     }
 
     @Override
-    public boolean inserir(Contato contato) throws Exception {
+    public boolean inserir(Contato contato) throws ValidationException, BusinessException, ExceptionValidationCampo, Exception {
         this.validation.validarCampos(contato);
         this.validation.validaRegraInserir(contato);
         return this.repository.inserir(contato);
     }
 
     @Override
-    public boolean alterar(Contato contato) throws Exception {
+    public boolean alterar(Contato contato) throws ValidationException, BusinessException, ExceptionValidationCampo, Exception {
         this.validation.validarCampos(contato);
         this.validation.validarRegrasAlterar(contato);
+        return this.repository.alterar(contato);
     }
 
     @Override
-    public boolean excluir(Contato contato) throws Exception {
-        if (this.contatoExiste(contato)) {
-            return this.repository.desativar(contato);
-        } else {
-            throw new Exception("Este contato já existe cadastrado");
-        }
+    public boolean excluir(Contato contato) throws BusinessException, Exception {
+        this.validation.validaRegraInativar(contato);
+        return this.repository.desativar(contato);
     }
-    
+
     @Override
-    public boolean excluir(String nome) throws Exception {
+    public boolean excluir(String nome) throws BusinessException, Exception {
         Contato contato = this.buscarPorNome(nome);
-        if(contato != null){
+        if (contato != null) {
             return excluir(contato);
         }
         return false;
     }
-    
+
     @Override
-    public List<Contato> listarPorNome(String name) throws Exception {
+    public List<Contato> listarPorNome(String name) throws BusinessException, Exception {
         List<Contato> all = this.buscarTodos();
         List<Contato> filtered = new ArrayList<>();
         for (Contato c : all) {
@@ -70,9 +71,9 @@ public class ContatoService implements IContatoService {
         }
         return filtered;
     }
-    
+
     @Override
-    public Contato buscarPorNome(String name) throws Exception {
+    public Contato buscarPorNome(String name) throws BusinessException, Exception {
         List<Contato> all = this.buscarTodos();
         for (Contato c : all) {
             if (c.getNome() != null && c.getNome().toLowerCase().contains(name.toLowerCase())) {
@@ -83,36 +84,28 @@ public class ContatoService implements IContatoService {
     }
 
     @Override
-    public List<Contato> buscarTodos() throws Exception {
+    public List<Contato> buscarTodos() throws BusinessException, Exception {
         return this.repository.buscarTodos();
     }
-    
+
     @Override
-    public List<Contato> buscarTodosAtivos() throws Exception {
+    public List<Contato> buscarTodosAtivos() throws BusinessException, Exception {
         return this.repository.buscarTodos(true);
     }
-    
+
     @Override
-    public List<Contato> buscarTodosInativos() throws Exception {
+    public List<Contato> buscarTodosInativos() throws BusinessException, Exception {
         return this.repository.buscarTodos(false);
     }
 
     @Override
-    public boolean contatoExiste(Contato contato) throws Exception {
+    public boolean contatoExiste(Contato contato) throws BusinessException, Exception {
         return this.repository.contatoExiste(contato);
     }
 
     @Override
-    public boolean reativaContato(Contato contato) throws Exception {
+    public boolean reativaContato(Contato contato) throws BusinessException, ExceptionValidationCampo, Exception {
+        this.validation.validaRegraAtivar(contato);
         return this.repository.reativar(contato);
     }
-
-//    private void validate(Contato dto) throws Exception {
-//        if (dto == null) {
-//            throw new Exception("Contato inválido");
-//        }
-//        if (dto.getNome() == null || dto.getNome().isBlank()) {
-//            throw new Exception("Nome é obrigatório");
-//        }
-//    }
 }
