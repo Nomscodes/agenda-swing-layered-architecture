@@ -18,7 +18,7 @@ import lombok.Getter;
 public class Response {
     private final String titulo;
     private final String icone;
-    private final String item;
+    private final String motivo;
     private final StatusResponse status;
     private final String mensagemErro;
     private final Object data;
@@ -26,7 +26,7 @@ public class Response {
     private Response(String titulo, String icone, String item, StatusResponse status, String mensagemErro, Object data) {
         this.titulo = titulo;
         this.icone = icone;
-        this.item = item;
+        this.motivo = item;
         this.status = status;
         this.mensagemErro = mensagemErro;
         this.data = data;
@@ -38,7 +38,7 @@ public class Response {
         this.status = StatusResponse.ERRO;
         this.mensagemErro = ex.getMessage();
         this.data = null;
-        this.item = "";
+        this.motivo = "";
     }
     
     private Response(ExceptionValidationCampo ex){
@@ -47,7 +47,7 @@ public class Response {
         this.status = StatusResponse.ERRO;
         this.mensagemErro = ex.getMessage();
         this.data = null;
-        this.item = ex.getCampo();
+        this.motivo = ex.getCampo();
     }
     
     private Response(ExceptionValidationRegra ex){
@@ -56,7 +56,7 @@ public class Response {
         this.status = StatusResponse.ERRO;
         this.mensagemErro = ex.getMessage();
         this.data = null;
-        this.item = ex.getRegra();
+        this.motivo = ex.getRegra();
     }  
     
     static public Response responseOk(Object data){

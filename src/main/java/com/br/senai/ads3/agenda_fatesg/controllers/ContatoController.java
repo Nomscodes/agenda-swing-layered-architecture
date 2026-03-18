@@ -2,7 +2,6 @@ package com.br.senai.ads3.agenda_fatesg.controllers;
 
 import com.br.senai.ads3.agenda_fatesg.domains.Contato;
 import com.br.senai.ads3.agenda_fatesg.dtos.Response;
-import com.br.senai.ads3.agenda_fatesg.enums.StatusResponse;
 import com.br.senai.ads3.agenda_fatesg.exceptions.CoreException;
 import com.br.senai.ads3.agenda_fatesg.exceptions.ExceptionValidationCampo;
 import com.br.senai.ads3.agenda_fatesg.exceptions.ExceptionValidationRegra;
