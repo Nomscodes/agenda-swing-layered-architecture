@@ -13,17 +13,16 @@ import lombok.Setter;
  *
  * @author Clayton
  */
-@Setter
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CoreException extends Exception{
-    private String titulo;
-    private String icone;
-    
-    public CoreException(String message, String titulo, String icone){
-        super(message);
-        this.titulo = titulo;
-        this.icone = icone;
+public class ExceptionValidationRegra extends CoreException {
+    private String regra;
+
+    public ExceptionValidationRegra(String regra, String message, String titulo, String icone) {
+        super(message, titulo, icone);
+        this.regra = regra;
     }
+    
 }

@@ -1,7 +1,11 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package com.br.senai.ads3.agenda_fatesg.repositories;
 
 import com.br.senai.ads3.agenda_fatesg.domains.Contato;
-import com.br.senai.ads3.agenda_fatesg.exceptions.BusinessException;
+import com.br.senai.ads3.agenda_fatesg.exceptions.CoreException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -14,7 +18,7 @@ import java.util.List;
 
 /**
  *
- * @author Gabriel 
+ * @author CLAYTON.MARQUES
  */
 public class ContatoRepository implements IContatoRepository {
     
@@ -30,34 +34,34 @@ public class ContatoRepository implements IContatoRepository {
     
 
     @Override
-    public boolean inserir(Contato contato) throws BusinessException {
+    public boolean inserir(Contato contato) throws CoreException {
         String linha = this.toCsvLine(contato, "ativo");
         return insereRegistro(linha);
     }
 
     @Override
-    public boolean alterar(Contato contato) throws BusinessException {
+    public boolean alterar(Contato contato) throws CoreException {
         String linha = this.toCsvLine(contato, "ativo");
         String linhaAntiga = buscaRegistro(contato.getNome());
         return alteraRegistro(linha, linhaAntiga);
     }
 
     @Override
-    public boolean desativar(Contato contato) throws BusinessException {
+    public boolean desativar(Contato contato) throws CoreException {
         String linha = this.toCsvLine(contato, "inativo");
         String linhaAntiga = buscaRegistro(contato.getNome());
         return alteraRegistro(linha, linhaAntiga);
     }
 
     @Override
-    public boolean reativar(Contato contato) throws BusinessException {
+    public boolean reativar(Contato contato) throws CoreException {
         String linha = this.toCsvLine(contato, "ativo");
         String linhaAntiga = buscaRegistro(contato.getNome());
         return alteraRegistro(linha, linhaAntiga);
     }
 
     @Override
-    public boolean contatoExiste(Contato contato) throws BusinessException {
+    public boolean contatoExiste(Contato contato) throws CoreException{
     	List<Contato> contatos = buscarTodos();
 		for (Contato c : contatos) {
 			if (c.getNome().equalsIgnoreCase(contato.getNome())) {
@@ -68,22 +72,26 @@ public class ContatoRepository implements IContatoRepository {
     }
 
     @Override
-    public List<Contato> buscarTodos() throws BusinessException {
+    public List<Contato> buscarTodos() throws CoreException {
         List<String> linhas = linhasAtivas(true, true);
         if (linhas == null || linhas.isEmpty()) {
             return List.of(); 
         }
-        return linhas.stream().map(this::toObject).toList(); 
+        return linhas.stream()
+                 .map(linha -> toObject(linha))
+                 .toList();
 
     }
     
     @Override
-    public List<Contato> buscarTodos(boolean ativos) throws BusinessException {
+    public List<Contato> buscarTodos(boolean ativos) throws CoreException {
         List<String> linhas = linhasAtivas(ativos, false);
         if (linhas == null || linhas.isEmpty()) {
             return List.of(); 
         }
-        return linhas.stream().map(this::toObject).toList();
+        return linhas.stream()
+                 .map(linha -> toObject(linha))
+                 .toList();
 
     } 
     
@@ -110,18 +118,17 @@ public class ContatoRepository implements IContatoRepository {
         }
     }
     
-    private boolean insereRegistro(final String registro) {
+    private boolean insereRegistro(final String registro) throws CoreException {
         try {
             ensureStorage();
             Files.write(storagePath, Collections.singleton(registro), StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
             return true;
         } catch (IOException ex) {
-            System.getLogger(ContatoRepository.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);            
+            throw new CoreException(ex.getMessage(), "Falha de inserção", "");
         }
-        return false;
     }
     
-    private boolean alteraRegistro(final String registro, String linhaAntiga) {
+    private boolean alteraRegistro(final String registro, String linhaAntiga) throws CoreException {
         try {
             ensureStorage();
             List<String> linhas = Files.readAllLines(storagePath, StandardCharsets.UTF_8);
@@ -137,13 +144,13 @@ public class ContatoRepository implements IContatoRepository {
                Files.write(storagePath, linhas, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
                return true;
             }
+            return false;
         } catch (IOException ex) {
-            System.getLogger(ContatoRepository.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);            
+            throw new CoreException(ex.getMessage(), "Falha de alteração", "");
         }
-        return false;
     }
     
-    private List<String> linhasAtivas(boolean ativos, boolean todos){
+    private List<String> linhasAtivas(boolean ativos, boolean todos) throws CoreException{
         try {
             ensureStorage();
             List<String> lines = Files.readAllLines(storagePath, StandardCharsets.UTF_8);
@@ -157,11 +164,11 @@ public class ContatoRepository implements IContatoRepository {
             }
             return result;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new CoreException("Falha ao buscar dados.", "Falha de consulta", "");
         }    
     }
 
-    private String buscaRegistro(String nome) {
+    private String buscaRegistro(String nome) throws CoreException {
         String result = "";
         List<String> linhas = linhasAtivas(true, true);
         if(linhas != null && !linhas.isEmpty()){

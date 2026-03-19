@@ -1,0 +1,14 @@
+C:\Work\Senai\2026\ads3\projetos\ads3.contatos-camadas\src\main\java\com\br\senai\ads3\agenda_fatesg\Agenda_Fatesg.java
+C:\Work\Senai\2026\ads3\projetos\ads3.contatos-camadas\src\main\java\com\br\senai\ads3\agenda_fatesg\controllers\ContatoController.java
+C:\Work\Senai\2026\ads3\projetos\ads3.contatos-camadas\src\main\java\com\br\senai\ads3\agenda_fatesg\controllers\FormController.java
+C:\Work\Senai\2026\ads3\projetos\ads3.contatos-camadas\src\main\java\com\br\senai\ads3\agenda_fatesg\controllers\ListController.java
+C:\Work\Senai\2026\ads3\projetos\ads3.contatos-camadas\src\main\java\com\br\senai\ads3\agenda_fatesg\domains\Contato.java
+C:\Work\Senai\2026\ads3\projetos\ads3.contatos-camadas\src\main\java\com\br\senai\ads3\agenda_fatesg\enums\TipoTela.java
+C:\Work\Senai\2026\ads3\projetos\ads3.contatos-camadas\src\main\java\com\br\senai\ads3\agenda_fatesg\exceptions\BusinessException.java
+C:\Work\Senai\2026\ads3\projetos\ads3.contatos-camadas\src\main\java\com\br\senai\ads3\agenda_fatesg\exceptions\ValidationException.java
+C:\Work\Senai\2026\ads3\projetos\ads3.contatos-camadas\src\main\java\com\br\senai\ads3\agenda_fatesg\pages\Form_Cadastro.java
+C:\Work\Senai\2026\ads3\projetos\ads3.contatos-camadas\src\main\java\com\br\senai\ads3\agenda_fatesg\pages\Form_Listagem.java
+C:\Work\Senai\2026\ads3\projetos\ads3.contatos-camadas\src\main\java\com\br\senai\ads3\agenda_fatesg\repositories\ContatoRepository.java
+C:\Work\Senai\2026\ads3\projetos\ads3.contatos-camadas\src\main\java\com\br\senai\ads3\agenda_fatesg\repositories\IContatoRepository.java
+C:\Work\Senai\2026\ads3\projetos\ads3.contatos-camadas\src\main\java\com\br\senai\ads3\agenda_fatesg\services\ContatoService.java
+C:\Work\Senai\2026\ads3\projetos\ads3.contatos-camadas\src\main\java\com\br\senai\ads3\agenda_fatesg\services\IContatoService.java

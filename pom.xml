@@ -14,20 +14,6 @@
     <plugins>
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.11.0</version>
-            <configuration>
-                <annotationProcessorPaths>
-                    <path>
-                        <groupId>org.projectlombok</groupId>
-                        <artifactId>lombok</artifactId>
-                        <version>1.18.38</version>
-                    </path>
-                </annotationProcessorPaths>
-            </configuration>
-        </plugin>
-        <plugin> <!-- verificar necessidade com o professor -->
-            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>
             <version>3.2.0</version>
             <configuration>
@@ -38,7 +24,7 @@
                     </manifest>
                 </archive>
             </configuration>
-        </plugin><!-- verificar necessidade com o professor -->
+        </plugin>
     </plugins>
 </build>
     <dependencies>
@@ -46,7 +32,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.38</version>
-            <scope>provided</scope> <!-- verificar com o professor da necessidade disso -->
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
