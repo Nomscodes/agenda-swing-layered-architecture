@@ -1,19 +1,22 @@
 package com.br.senai.ads3.agenda_fatesg.pages;
 
 import com.br.senai.ads3.agenda_fatesg.controllers.ContatoController;
-import com.br.senai.ads3.agenda_fatesg.controllers.FormController;
-import com.br.senai.ads3.agenda_fatesg.controllers.ListController;
 import com.br.senai.ads3.agenda_fatesg.domains.Contato;
 import com.br.senai.ads3.agenda_fatesg.enums.TipoTela;
 import java.awt.EventQueue;
+import java.awt.HeadlessException;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.RowFilter;
 import javax.swing.table.TableRowSorter;
 import javax.swing.JOptionPane;
-import java.nio.file.Path;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
+import com.br.senai.ads3.agenda_fatesg.controllers.IContatoListaController;
+import com.br.senai.ads3.agenda_fatesg.controllers.IContatoCadastroController;
+import com.br.senai.ads3.agenda_fatesg.dtos.Response;
+import com.br.senai.ads3.agenda_fatesg.enums.StatusResponse;
 
 /**
  *
@@ -21,19 +24,24 @@ import javax.swing.SwingWorker;
  */
 public class Form_Listagem extends javax.swing.JFrame {
 
-    private final ListController contatoController;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private final IContatoListaController contatoController;
 
     /**
      * Creates new form Form_Listagem
+     * @param controller
      */
-    public Form_Listagem(ListController controller) {
+    public Form_Listagem(IContatoListaController controller) {
         this.contatoController = controller;
         initComponents();
         carregarDadosAsync();
     }
 
     public Form_Listagem() {
-        this(new ContatoController(Path.of("agenda.txt")));
+        this(new ContatoController());
     }
 
     /**
@@ -55,7 +63,6 @@ public class Form_Listagem extends javax.swing.JFrame {
         grid = new javax.swing.JTable();
         btnFechar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
-        jButtonVoltarInicio = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -173,17 +180,6 @@ public class Form_Listagem extends javax.swing.JFrame {
             }
         });
 
-        jButtonVoltarInicio.setBackground(new java.awt.Color(102, 102, 102));
-        jButtonVoltarInicio.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButtonVoltarInicio.setForeground(new java.awt.Color(255, 255, 255));
-        jButtonVoltarInicio.setText("Voltar à tela inicial");
-        jButtonVoltarInicio.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButtonVoltarInicio.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonVoltarInicioActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -202,13 +198,11 @@ public class Form_Listagem extends javax.swing.JFrame {
                         .addGap(0, 31, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(jButtonVoltarInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(btnFechar, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(142, 142, 142)
+                .addGap(141, 141, 141)
                 .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(45, 45, 45))
+                .addGap(46, 46, 46))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -220,11 +214,9 @@ public class Form_Listagem extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonVoltarInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnFechar)
-                        .addComponent(btnExcluir)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnFechar)
+                    .addComponent(btnExcluir))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
 
@@ -251,7 +243,7 @@ public class Form_Listagem extends javax.swing.JFrame {
                 }
 
                 // Abre tela de cadastro em modo EDIT passando o controller
-                Form_Cadastro cadastro = new Form_Cadastro(TipoTela.EDIT, new Contato(nome, email, telefone), (com.br.senai.ads3.agenda_fatesg.controllers.FormController) contatoController);
+                Form_Cadastro cadastro = new Form_Cadastro(TipoTela.EDIT, new Contato(nome, email, telefone), (com.br.senai.ads3.agenda_fatesg.controllers.IContatoCadastroController) contatoController);
                 cadastro.setVisible(true);
                 this.dispose();
             }
@@ -259,7 +251,7 @@ public class Form_Listagem extends javax.swing.JFrame {
     }//GEN-LAST:event_gridMouseClicked
 
     private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
-        Form_Cadastro cadastro = new Form_Cadastro((FormController) contatoController);
+        Form_Cadastro cadastro = new Form_Cadastro((IContatoCadastroController) contatoController);
         cadastro.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnAdicionarActionPerformed
@@ -293,40 +285,35 @@ public class Form_Listagem extends javax.swing.JFrame {
             return;
         }
 
-        SwingWorker<Boolean, Void> worker = new SwingWorker<>() {
+        SwingWorker<Response, Void> worker = new SwingWorker<>() {
             @Override
-            protected Boolean doInBackground() {
-                try {
-                    return contatoController.markInactiveByName(nome);
-                } catch (Exception ex) {
-                    SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(Form_Listagem.this, "Erro ao excluir: " + ex.getMessage()));
-                    return false;
+            protected Response doInBackground() {
+                Response response = contatoController.inativarPorNome(nome);
+                if(response.getStatus().equals(StatusResponse.ERRO)) {
+                    SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(Form_Listagem.this, response.getTitulo().concat(": ").concat(response.getMensagemErro())));
+                    return null;
+                } else {
+                    return response;
                 }
             }
 
             @Override
             protected void done() {
                 try {
-                    Boolean ok = get();
+                    Response response = get();
                     if (ok) {
                         JOptionPane.showMessageDialog(Form_Listagem.this, "Contato marcado como inativo.");
                         carregarDadosAsync(); // recarrega tabela
                     } else {
                         JOptionPane.showMessageDialog(Form_Listagem.this, "Contato não encontrado ou já inativo.");
                     }
-                } catch (Exception ex) {
+                } catch (HeadlessException | InterruptedException | ExecutionException ex) {
                     JOptionPane.showMessageDialog(Form_Listagem.this, "Erro ao processar exclusão: " + ex.getMessage());
                 }
             }
         };
         worker.execute();
     }//GEN-LAST:event_btnExcluirActionPerformed
-
-    private void jButtonVoltarInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVoltarInicioActionPerformed
-        // TODO add your handling code here:
-        new TelaInicial().setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_jButtonVoltarInicioActionPerformed
 
     /**
      * @param args the command line arguments
@@ -356,10 +343,8 @@ public class Form_Listagem extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Form_Listagem().setVisible(true);
-            }
+        EventQueue.invokeLater(() -> {
+            new Form_Listagem().setVisible(true);
         });
     }
 
@@ -369,7 +354,6 @@ public class Form_Listagem extends javax.swing.JFrame {
     private javax.swing.JButton btnFechar;
     private javax.swing.JTextField edtFiltroNome;
     private javax.swing.JTable grid;
-    private javax.swing.JButton jButtonVoltarInicio;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -381,7 +365,12 @@ public class Form_Listagem extends javax.swing.JFrame {
         SwingWorker<List<Contato>, Void> worker = new SwingWorker<>() {
             @Override
             protected List<Contato> doInBackground() {
-                return contatoController.listAll();
+                try {
+                    return contatoController.listarTodosAtivos();
+                } catch (Exception ex) {
+                    SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(Form_Listagem.this, "Erro ao carregar dados: " + ex.getMessage()));
+                }
+                return null;
             }
 
             @Override
@@ -389,7 +378,7 @@ public class Form_Listagem extends javax.swing.JFrame {
                 try {
                     List<Contato> list = get();
                     populateTable(list);
-                } catch (Exception ex) {
+                } catch (InterruptedException | ExecutionException ex) {
                     SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(Form_Listagem.this, "Erro ao carregar dados: " + ex.getMessage()));
                 }
             }

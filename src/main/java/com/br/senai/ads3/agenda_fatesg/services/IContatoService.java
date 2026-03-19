@@ -5,6 +5,9 @@
 package com.br.senai.ads3.agenda_fatesg.services;
 
 import com.br.senai.ads3.agenda_fatesg.domains.Contato;
+import com.br.senai.ads3.agenda_fatesg.exceptions.CoreException;
+import com.br.senai.ads3.agenda_fatesg.exceptions.ExceptionValidationCampo;
+import com.br.senai.ads3.agenda_fatesg.exceptions.ExceptionValidationRegra;
 import java.util.List;
 
 /**
@@ -12,15 +15,15 @@ import java.util.List;
  * @author CLAYTON.MARQUES
  */
 public interface IContatoService{
-    boolean inserir(final Contato contato) throws Exception;
-    boolean alterar(final Contato contato) throws Exception;
-    boolean excluir(final Contato contato) throws Exception;
-    boolean excluir(final String nome) throws Exception;
-    List<Contato> buscarTodos() throws Exception;
-    List<Contato> buscarTodosAtivos() throws Exception;
-    List<Contato> buscarTodosInativos() throws Exception;
-    boolean contatoExiste(final Contato contato) throws Exception;
-    boolean reativaContato(final Contato contato) throws Exception;
-    Contato buscarPorNome(String name) throws Exception;
-    List<Contato> listarPorNome(String name) throws Exception;
+    boolean inserir(final Contato contato) throws ExceptionValidationCampo, ExceptionValidationRegra;
+    boolean alterar(final Contato contato) throws ExceptionValidationCampo, ExceptionValidationRegra;
+    boolean excluir(final Contato contato) throws ExceptionValidationCampo, ExceptionValidationRegra;
+    boolean excluir(final String nome) throws ExceptionValidationCampo, ExceptionValidationRegra;
+    List<Contato> buscarTodos() throws CoreException;
+    List<Contato> buscarTodosAtivos() throws CoreException;
+    List<Contato> buscarTodosInativos() throws CoreException;
+    boolean contatoExiste(final Contato contato) throws CoreException;
+    boolean reativaContato(final Contato contato) throws CoreException;
+    Contato buscarPorNome(String name) throws CoreException;
+    List<Contato> listarPorNome(String name) throws CoreException;
 }

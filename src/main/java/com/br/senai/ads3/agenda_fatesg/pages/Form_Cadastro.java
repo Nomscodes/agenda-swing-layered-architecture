@@ -1,18 +1,17 @@
 package com.br.senai.ads3.agenda_fatesg.pages;
 
 import com.br.senai.ads3.agenda_fatesg.controllers.ContatoController;
-import com.br.senai.ads3.agenda_fatesg.controllers.FormController;
 import com.br.senai.ads3.agenda_fatesg.domains.Contato;
 import com.br.senai.ads3.agenda_fatesg.enums.TipoTela;
 import com.br.senai.ads3.agenda_fatesg.exceptions.BusinessException;
 import com.br.senai.ads3.agenda_fatesg.exceptions.ValidationException;
 import java.awt.Color;
-import java.io.FileWriter;
-import java.nio.file.Files;
-import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
+import com.br.senai.ads3.agenda_fatesg.controllers.IContatoCadastroController;
+import com.br.senai.ads3.agenda_fatesg.dtos.Response;
+import com.br.senai.ads3.agenda_fatesg.enums.StatusResponse;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -31,9 +30,9 @@ public class Form_Cadastro extends javax.swing.JFrame {
      */
     final private TipoTela tipoTela;
     private Contato contato;
-    private final FormController contatoController;
+    private final IContatoCadastroController contatoController;
 
-    public Form_Cadastro(final TipoTela tipoTela, final Contato contato, final FormController controller) {
+    public Form_Cadastro(final TipoTela tipoTela, final Contato contato, final IContatoCadastroController controller) {
         this.tipoTela = tipoTela;
         if (contato == null) {
             this.contato = new Contato("", "", "");
@@ -46,12 +45,12 @@ public class Form_Cadastro extends javax.swing.JFrame {
         carregaTela();
     }
 
-    public Form_Cadastro(FormController controller) {
+    public Form_Cadastro(IContatoCadastroController controller) {
         this(TipoTela.INSERT, null, controller);
     }
 
     public Form_Cadastro() {
-        this(new ContatoController("agenda.txt"));
+        this(new ContatoController());
     }
 
     /**
@@ -73,7 +72,6 @@ public class Form_Cadastro extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         btnGravar = new javax.swing.JButton();
         btnFechar = new javax.swing.JButton();
-        jButtonVoltarInicial = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(215, 63, 17));
@@ -170,17 +168,6 @@ public class Form_Cadastro extends javax.swing.JFrame {
             }
         });
 
-        jButtonVoltarInicial.setBackground(new java.awt.Color(102, 102, 102));
-        jButtonVoltarInicial.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButtonVoltarInicial.setForeground(new java.awt.Color(255, 255, 255));
-        jButtonVoltarInicial.setText("Voltar à tela inicial");
-        jButtonVoltarInicial.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButtonVoltarInicial.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonVoltarInicialActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -197,10 +184,7 @@ public class Form_Cadastro extends javax.swing.JFrame {
                         .addGap(109, 109, 109)
                         .addComponent(btnGravar, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(160, 160, 160)
-                        .addComponent(btnFechar, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(231, 231, 231)
-                        .addComponent(jButtonVoltarInicial, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnFechar, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(46, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -214,9 +198,7 @@ public class Form_Cadastro extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGravar, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnFechar, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jButtonVoltarInicial)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         pack();
@@ -234,30 +216,26 @@ public class Form_Cadastro extends javax.swing.JFrame {
         Contato dto = new Contato(nomeNovo, email, telefone);
         String originalName = this.contato != null ? this.contato.getNome() : "";
 
-        String status = "ativo";
-
         // Executar I/O em background para não travar UI
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
             @Override
-            protected Void doInBackground() {
-                try {
-                    if (!isEdit) {
-                        contatoController.create(dto);
-                    } else {
-                        contatoController.update(originalName, dto);
-                    }
-                } catch (ValidationException | BusinessException ex) {
-                    SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(Form_Cadastro.this, ex.getMessage()));
-                } catch (Exception ex) {
-                    SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(Form_Cadastro.this, "Erro inesperado: " + ex.getMessage()));
+            protected Void doInBackground() {                
+                Response response;
+                if (!isEdit) {
+                    response = contatoController.criar(dto);
+                } else {
+                    response = contatoController.alterar(originalName, dto);
                 }
-                return null;
+                if(response.getStatus().equals(StatusResponse.ERRO)) {
+                    SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(Form_Cadastro.this, response.getMensagemErro()));
+                }
+                return null;                
             }
 
             @Override
             protected void done() {
                 // voltar para listagem
-                Form_Listagem list = new Form_Listagem((com.br.senai.ads3.agenda_fatesg.controllers.ListController) contatoController);
+                Form_Listagem list = new Form_Listagem((com.br.senai.ads3.agenda_fatesg.controllers.IContatoListaController) contatoController);
                 list.setVisible(true);
                 dispose();
             }
@@ -270,12 +248,6 @@ public class Form_Cadastro extends javax.swing.JFrame {
         new Form_Listagem().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnFecharActionPerformed
-
-    private void jButtonVoltarInicialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVoltarInicialActionPerformed
-        // TODO add your handling code here:
-        new TelaInicial().setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_jButtonVoltarInicialActionPerformed
 
     /**
      * @param args the command line arguments
@@ -306,10 +278,8 @@ public class Form_Cadastro extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Form_Cadastro().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new Form_Cadastro().setVisible(true);
         });
     }
 
@@ -319,7 +289,6 @@ public class Form_Cadastro extends javax.swing.JFrame {
     private javax.swing.JTextField edtEmail;
     private javax.swing.JTextField edtNome;
     private javax.swing.JTextField edtTelefone;
-    private javax.swing.JButton jButtonVoltarInicial;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel lblEmail;
     private javax.swing.JLabel lblNome;
