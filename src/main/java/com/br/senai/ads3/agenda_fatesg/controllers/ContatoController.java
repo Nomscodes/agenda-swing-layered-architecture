@@ -1,133 +1,88 @@
 package com.br.senai.ads3.agenda_fatesg.controllers;
 
 import com.br.senai.ads3.agenda_fatesg.domains.Contato;
-import com.br.senai.ads3.agenda_fatesg.exceptions.BusinessException;
-import com.br.senai.ads3.agenda_fatesg.exceptions.ValidationException;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
+import com.br.senai.ads3.agenda_fatesg.dtos.Response;
+import com.br.senai.ads3.agenda_fatesg.enums.StatusResponse;
+import com.br.senai.ads3.agenda_fatesg.exceptions.CoreException;
+import com.br.senai.ads3.agenda_fatesg.exceptions.ExceptionValidationCampo;
+import com.br.senai.ads3.agenda_fatesg.exceptions.ExceptionValidationRegra;
+import com.br.senai.ads3.agenda_fatesg.services.ContatoService;
+import com.br.senai.ads3.agenda_fatesg.services.IContatoService;
+import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public class ContatoController implements FormController, ListController {
+public class ContatoController implements IContatoCadastroController, IContatoListaController {
+    
+    private final IContatoService service;
 
-    private final Path storagePath;
+    public ContatoController() {
+       this.service = new ContatoService();
+    }    
 
-    public ContatoController(Path storagePath) {
-        this.storagePath = storagePath;
+    public ContatoController(Path storage) {
+        this.service = new ContatoService(storage);
     }
-
-    public ContatoController(String storageFilePath) {
-        this(Paths.get(storageFilePath));
-    }
-
+    
     @Override
-    public void validate(Contato dto) throws ValidationException {
-        if (dto == null) {
-            throw new ValidationException("Contato inválido");
-        }
-        if (dto.getNome() == null || dto.getNome().isBlank()) {
-            throw new ValidationException("Nome é obrigatório");
-        }
-    }
-
-    @Override
-    public Contato create(Contato dto) throws ValidationException, BusinessException {
-        validate(dto);
+    public Response criar(Contato dto){
         try {
-            ensureStorage();
-            List<String> lines = Files.exists(storagePath) ? Files.readAllLines(storagePath, StandardCharsets.UTF_8) : Collections.emptyList();
-            for (String linha : lines) {
-                String[] registro = linha.split(";");
-                String nomeSalvo = registro.length > 0 ? registro[0] : "";
-                String status = registro.length > 3 ? registro[3] : "ativo";
-                if (nomeSalvo.equalsIgnoreCase(dto.getNome()) && "ativo".equalsIgnoreCase(status)) {
-                    throw new BusinessException("Erro: O nome '" + dto.getNome() + "' já está cadastrado!");
-                }
+            if(this.service.inserir(dto)){
+                return Response.responseOk(dto);
+            } else {
+                return Response.responseOk(null);
             }
-            String line = toCsvLine(dto, "ativo");
-            Files.write(storagePath, Collections.singleton(line), StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
-            return dto;
-        } catch (IOException e) {
-            throw new RuntimeException("Erro de I/O: " + e.getMessage(), e);
+        } catch (ExceptionValidationCampo ex) {
+            return Response.responseErroCampo(ex);
+        } catch (ExceptionValidationRegra ex) {
+            return Response.responseErroRegra(ex);
         }
     }
 
     @Override
-    public Contato update(String originalName, Contato dto) throws ValidationException, BusinessException {
-        validate(dto);
+    public Response alterar(String originalName, Contato dto) {
         try {
-            ensureStorage();
-            List<String> lines = Files.readAllLines(storagePath, StandardCharsets.UTF_8);
-            boolean found = false;
-            for (int i = 0; i < lines.size(); i++) {
-                if (lines.get(i).startsWith(originalName + ";")) {
-                    String newLine = toCsvLine(dto, "ativo");
-                    lines.set(i, newLine);
-                    found = true;
-                    break;
-                }
+            if(this.service.alterar(dto)){
+                return Response.responseOk(dto);
+            } else {
+                return Response.responseOk(null);
             }
-            if (!found) {
-                throw new BusinessException("Registro original não encontrado: " + originalName);
-            }
-            Files.write(storagePath, lines, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
-            return dto;
-        } catch (IOException e) {
-            throw new RuntimeException("Erro de I/O: " + e.getMessage(), e);
+        } catch (ExceptionValidationCampo ex) {
+            return Response.responseErroCampo(ex);
+        } catch (ExceptionValidationRegra ex) {
+            return Response.responseErroRegra(ex);
         }
     }
 
     @Override
-    public List<Contato> listAll() {
+    public Response listarTodos()  {
         try {
-            ensureStorage();
-            List<String> lines = Files.readAllLines(storagePath, StandardCharsets.UTF_8);
-            List<Contato> result = new ArrayList<>();
-            for (String l : lines) {
-                String[] d = l.split(";");
-                String status = d.length > 3 ? d[3] : "ativo";
-                if ("ativo".equalsIgnoreCase(status)) {
-                    String nome = d.length > 0 ? d[0] : "";
-                    String email = d.length > 1 ? d[1] : "";
-                    String tel = d.length > 2 ? d[2] : "";
-                    result.add(new Contato(nome, email, tel));
-                }
-            }
-            return result;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            return Response.responseOk(this.service.buscarTodos());
+        } catch (CoreException ex) {
+            return Response.responseErro(ex);
         }
     }
-
     @Override
-    public boolean markInactiveByName(String name) throws BusinessException {
+    public Response listarTodosAtivos(){
         try {
-            ensureStorage();
-            List<String> lines = Files.readAllLines(storagePath, StandardCharsets.UTF_8);
-            boolean found = false;
-            for (int i = 0; i < lines.size(); i++) {
-                if (lines.get(i).startsWith(name + ";")) {
-                    String[] r = lines.get(i).split(";");
-                    String newLine = (r.length > 0 ? r[0] : "") + ";" + (r.length > 1 ? r[1] : "") + ";" + (r.length > 2 ? r[2] : "") + ";inativo";
-                    lines.set(i, newLine);
-                    found = true;
-                    break;
-                }
-            }
-            if (found) {
-                Files.write(storagePath, lines, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
-            }
-            return found;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            return Response.responseOk(this.service.buscarTodosAtivos());
+        } catch (CoreException ex) {
+            return Response.responseErro(ex);
         }
+    }
+    @Override
+    public Response listaTodosInativos(){
+        return this.service.buscarTodosInativos();
     }
 
     @Override
-    public List<Contato> findByName(String name) {
-        List<Contato> all = listAll();
+    public Response inativarPorNome(String name){
+        return this.service.excluir(name);
+    }
+
+    @Override
+    public Response buscarPorNome(String name){
+        List<Contato> all = listarTodos();
         List<Contato> filtered = new ArrayList<>();
         for (Contato c : all) {
             if (c.getNome() != null && c.getNome().toLowerCase().contains(name.toLowerCase())) {
@@ -135,18 +90,5 @@ public class ContatoController implements FormController, ListController {
             }
         }
         return filtered;
-    }
-
-    private void ensureStorage() throws IOException {
-        if (!Files.exists(storagePath)) {
-            Files.createFile(storagePath);
-        }
-    }
-
-    private String toCsvLine(Contato c, String status) {
-        String nome = c.getNome() == null ? "" : c.getNome();
-        String email = c.getEmail() == null ? "" : c.getEmail();
-        String tel = c.getTelefone() == null ? "" : c.getTelefone();
-        return nome + ";" + email + ";" + tel + ";" + status + System.lineSeparator();
     }
 }
